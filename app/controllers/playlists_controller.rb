@@ -1,5 +1,5 @@
 class PlaylistsController < ApplicationController
-  before_action :set_playlist, only: %i[show update destroy]
+  before_action :set_playlist, only: %i[show update destroy add_musicas]
 
   # GET /playlists
   def index
@@ -9,7 +9,7 @@ class PlaylistsController < ApplicationController
 
   # GET /playlists/:id
   def show
-    render json: @playlist
+    render json: @playlist.to_json(include: :musicas)
   end
 
   # POST /playlists
@@ -39,11 +39,9 @@ class PlaylistsController < ApplicationController
 
   # POST /playlists/:id/musicas
   def add_musicas
-    @playlist = Playlist.find(params[:id])
     musica = Musica.find(params[:musica_id])
-
     @playlist.musicas << musica
-    render json: @playlist
+    render json: @playlist, status: :created
   end
 
   private
