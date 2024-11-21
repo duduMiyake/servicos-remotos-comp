@@ -14,7 +14,14 @@ class PlaylistsController < ApplicationController
 
   # POST /playlists
   def create
-    @playlist = Playlist.new(playlist_params)
+    usuario = Usuario.find_by(nome: params[:usuario_nome])
+
+    # Retorna erro se o usuário não for encontrado
+    unless usuario
+      return render json: { error: "Usuário não encontrado" }, status: :unprocessable_entity
+    end
+
+    @playlist = Playlist.new(nome: params[:nome], usuario: usuario)
 
     if @playlist.save
       render json: @playlist, status: :created
@@ -25,7 +32,12 @@ class PlaylistsController < ApplicationController
 
   # PUT /playlists/:id
   def update
-    if @playlist.update(playlist_params)
+    usuario = Usuario.find_by(nome: params[:playlist][:usuario_nome])
+    unless usuario
+      return render json: { error: "Usuário não encontrado" }, status: :unprocessable_entity
+    end
+
+    if @playlist.update(playlist_params.except(:usuario_nome).merge(usuario: usuario))
       render json: @playlist
     else
       render json: @playlist.errors, status: :unprocessable_entity
@@ -51,6 +63,6 @@ class PlaylistsController < ApplicationController
   end
 
   def playlist_params
-    params.require(:playlist).permit(:nome, :usuario_id)
+    params.permit(:nome, :usuario_nome)
   end
 end
