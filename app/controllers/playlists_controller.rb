@@ -16,7 +16,6 @@ class PlaylistsController < ApplicationController
   def create
     usuario = Usuario.find_by(nome: params[:usuario_nome])
 
-    # Retorna erro se o usuário não for encontrado
     unless usuario
       return render json: { error: "Usuário não encontrado" }, status: :unprocessable_entity
     end

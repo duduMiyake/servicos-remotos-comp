@@ -4,12 +4,12 @@ class MusicasController < ApplicationController
   # GET /musicas
   def index
     @musicas = Musica.all
-    render json: @musicas
+    render json: @musicas.to_json(include: :playlists)
   end
 
   # GET /musicas/:id
   def show
-    render json: @musica
+    render json: @musica.to_json(include: :playlists)
   end
 
   # POST /musicas

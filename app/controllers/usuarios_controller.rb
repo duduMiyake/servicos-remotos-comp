@@ -12,6 +12,16 @@ class UsuariosController < ApplicationController
     render json: @usuario
   end
 
+  def playlists_by_user
+    usuario = Usuario.find_by(nome: params[:nome])
+
+    unless usuario
+      return render json: { error: "Usuário não encontrado" }, status: :not_found
+    end
+
+    render json: usuario.playlists
+  end
+
   # POST /usuarios
   def create
     @usuario = Usuario.new(usuario_params)
