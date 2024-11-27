@@ -1,5 +1,5 @@
 class MusicasController < ApplicationController
-  before_action :set_musica, only: %i[show update destroy]
+  before_action :set_musica, only: %i[show update destroy playlists]
 
   # GET /musicas
   def index
@@ -10,6 +10,12 @@ class MusicasController < ApplicationController
   # GET /musicas/:id
   def show
     render json: @musica
+  end
+
+  # GET /musicas/:id/playlists
+  def playlists
+    @playlists = @musica.playlists
+    render json: @playlists
   end
 
   # POST /musicas

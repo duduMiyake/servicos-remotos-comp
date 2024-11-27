@@ -1,15 +1,28 @@
 class PlaylistsController < ApplicationController
-  before_action :set_playlist, only: %i[show update destroy add_musicas]
+  before_action :set_playlist, only: %i[show musicas]
 
   # GET /playlists
   def index
-    @playlists = Playlist.all
+    if params[:usuario_id]
+      # Filtra as playlists de um usuário específico
+      @usuario = Usuario.find(params[:usuario_id])
+      @playlists = @usuario.playlists
+    else
+      # Caso não tenha o usuario_id, retorna todas as playlists
+      @playlists = Playlist.all
+    end
     render json: @playlists
   end
 
   # GET /playlists/:id
   def show
-    render json: @playlist.to_json(include: :musicas)
+    @playlist = Playlist.find(params[:id])
+    render json: @playlist, include: :musicas
+  end
+
+  def musicas
+    @musica_playlist = @playlist.musicas
+    render json: @musica_playlist
   end
 
   # POST /playlists
